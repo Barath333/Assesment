@@ -4,16 +4,14 @@ import Icon from "./Icon";
 
 // Added 'icon' to the props and drag payload
 const DraggableBlock = ({ id, type, label, icon, bgColor, children }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: id,
     data: { type, label, icon, bgColor }, 
   });
 
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    zIndex: 50,
-    opacity: 0.5,
-  } : undefined;
+  // The DragOverlay in App.js shows the block that follows the cursor,
+  // so the palette block stays in place (just dimmed) instead of moving as a second copy.
+  const style = { opacity: isDragging ? 0.4 : 1 };
 
   return (
     <div
@@ -31,7 +29,7 @@ const DraggableBlock = ({ id, type, label, icon, bgColor, children }) => {
 
 export default function Sidebar() {
   return (
-   <div className="w-60 flex-none h-full overflow-y-auto flex flex-col items-start p-2 pb-20 border-r border-gray-200">
+    <div className="w-60 flex-none h-full overflow-y-auto flex flex-col items-start p-2 pb-20 border-r border-gray-200">
       
       <div className="font-bold"> {"Events"} </div>
       <DraggableBlock id="event-flag" type="EVENT_FLAG" label="When flag clicked" icon="flag" bgColor="bg-yellow-500">
@@ -62,8 +60,8 @@ export default function Sidebar() {
       <DraggableBlock id="looks-say" type="SAY_MESSAGE" label="Say Hello for 2 seconds" bgColor="bg-purple-500" />
       <DraggableBlock id="looks-think" type="THINK_MESSAGE" label="Think Hmm... for 2 seconds" bgColor="bg-purple-500" />
 
-<div className="font-bold mt-4"> {"Control"} </div>
-<DraggableBlock id="control-repeat" type="REPEAT" label="Repeat animation" bgColor="bg-red-500" />
+      <div className="font-bold mt-4"> {"Control"} </div>
+      <DraggableBlock id="control-repeat" type="REPEAT" label="Repeat animation" bgColor="bg-red-500" />
     </div>
   );
 }
